@@ -46,8 +46,7 @@
 
 - (void)scheduleLookupWithInterval:(NSTimeInterval)interval
 {
-	if(!self.nextScheduledLookupDate)
-	{
+	if (!self.nextScheduledLookupDate) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 	}
 	
@@ -85,16 +84,14 @@
 
 - (void)setDateForNextScheduledLookup
 {
-	if(self.scheduledLookupInterval > 0)
-	{
+	if (self.scheduledLookupInterval > 0) {
 		self.nextScheduledLookupDate = [[NSDate date] dateByAddingTimeInterval:self.scheduledLookupInterval];
 	}	
 }
 
 - (void)appDidBecomeActive
 {
-	if([self.nextScheduledLookupDate timeIntervalSinceNow] < -self.scheduledLookupInterval)
-	{
+	if ([self.nextScheduledLookupDate timeIntervalSinceNow] < -self.scheduledLookupInterval) {
 		[self start];
 	}
 }
@@ -105,8 +102,7 @@
 {
 	[self cleanupConnection];
 	
-	if(self.delegate)
-	{
+	if (self.delegate) {
 		return [self.delegate updateLookup:self didFailWithError:error];
 	}
 	
@@ -129,8 +125,7 @@
 {
 	NSDictionary *appStoreInfo = [NSJSONSerialization JSONObjectWithData:self.connectionData options:0 error:nil];
 	
-	if(appStoreInfo)
-	{
+	if (appStoreInfo) {
 		JSUpdateInfo *updateInfo = [[JSUpdateInfo alloc] initWithAppStoreInfo:appStoreInfo];
 		
 		NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
@@ -152,17 +147,12 @@
 		}
 		
 		[self setDateForNextScheduledLookup];
-	}
-	else
-	{
+	} else {
 		NSError *error = [NSError errorWithDomain:@"JSUpdateLookup" code:0 userInfo:@{@"error":@"Could not read data from App Store Web Service"}];
 		
-		if(self.delegate)
-		{
+		if (self.delegate) {
 			[self.delegate updateLookup:self didFailWithError:error];
-		}
-		else
-		{
+		} else {
 			self.completionHandler(nil, error);
 		}
 	}
@@ -176,8 +166,7 @@
 
 - (instancetype)initWithAppStoreInfo:(NSDictionary *)appStoreInfo
 {
-	if(!(self = [super init]))
-	{
+	if (!(self = [super init])) {
 		return nil;
 	}
 	
@@ -194,7 +183,7 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@\nCurrent app version: %@\nLatest App Version: %@\nUpdate available: %u\nRelease notes:%@",[super description], self.currentAppVersion, self.latestAppVersion, self.updateAvailable, self.releaseNotes];
+	return [NSString stringWithFormat:@"%@\nCurrent app version: %@\nLatest App Version: %@\nUpdate available: %u\nRelease notes:%@", [super description], self.currentAppVersion, self.latestAppVersion, self.updateAvailable, self.releaseNotes];
 }
 
 @end
